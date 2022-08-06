@@ -96,6 +96,7 @@ def sort_level_order(level, order):
     sorts a dictionary with a specific order of keys and returns the sorted dictionary
     any keys not defined in the order are kept in the same order as they were in the original dictionary
     '''
+    if not isinstance(level, dict): return level
     level_sorted = {}
     for key in order:
         if key in level:
