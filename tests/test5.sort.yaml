@@ -1,0 +1,8 @@
+sort: key
+all:
+  sort: key
+each:
+  sort: 
+    - summary
+people:
+  sort: element.firstname

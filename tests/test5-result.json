@@ -1,0 +1,30 @@
+{
+    "info": {
+        "summary": "some useless info",
+        "alist": [
+            "a",
+            "b",
+            "c",
+            "d"
+        ],
+        "somerandomdata": "some random data"
+    },
+    "meta": {
+        "summary": "Tests multiple references referencing the same element to sort",
+        "version": "1.0.0"
+    },
+    "people": [
+        {
+            "firstname": "Jane",
+            "lastname": "Doe"
+        },
+        {
+            "firstname": "Joe",
+            "lastname": "Doe"
+        },
+        {
+            "firstname": "John",
+            "lastname": "Doe"
+        }
+    ]
+}
