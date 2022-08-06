@@ -87,7 +87,6 @@ list:
 
 # Writing a Sorting Definition
 
-## Stucture
 Sorting definitions are structured in the same way as the file to be sorted. You can think of the base file as a tree, where the root is the top level of the file, and the children are the elements. Each tree element can define how to sort its children. To achieve this ssort defines the sorting keyword "sort" and ways to reference the children of an element.
 
 ## Sort Keyword
@@ -140,7 +139,7 @@ sort:
 #or
 sort: element.<value>
 ```
-Sorts all the children of the element that have a child calle <value> by the value of that child. All other children are at the end of the list.
+Sorts all the children of the element that have a child called <value> by the value of that child. All other children are at the end of the list.
 
 ### Sort by Custom Order
 
@@ -148,18 +147,18 @@ Sorts all the children of the element that have a child calle <value> by the val
 sort: 
   by: custom
   order:
-  - <value>
-  - <value>
-  - <value>
-  - <value>
+  - <key>
+  - <key>
+  - <key>
+  ...
 #or
 sort:
-- <value>
-- <value>
-- <value>
-- <value>
+- <key>
+- <key>
+- <key>
+...
 ```
-Sorts the children of an element by the order of the values in the order list. All other children are at the end of the list in the order they appeared in originally.
+Sorts the children of an element by they key in the order they appear in the order list. All other children are at the end of the list in the order they appeared in originally.
 
 ## Referencing Children
 
