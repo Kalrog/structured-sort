@@ -8,6 +8,8 @@ from ruamel.yaml import YAML
 import json
 from collections import OrderedDict
 
+import re
+
 import argparse
 import sys
 
@@ -16,53 +18,89 @@ def sort_level(level, sorting):
     '''
     sorts one level of a structured file according to it's sorting definition
     '''
-    #if sorting is a string
+    #syntactic sugar for sorting when only "by" entry is required in the sorting definition
     if isinstance(sorting, str):
+        #pattern for element value sorting
+        element_pattern = re.compile('element.(?P<value>.*)')
         if sorting == 'none':
             return level
         elif sorting == 'key':
             return sort_level_key(level)
-    elif isinstance(sorting, dict):
-        sort_by=sorting['by']
-        if sort_by == 'value':
+        elif sorting == 'value':
             return sort_level_value(level)
-        elif sort_by == 'element':
-            return sort_level_element(level, sorting['value'])
+        elif element_pattern.match(sorting):
+            value = element_pattern.match(sorting).group('value')
+            return sort_level_element(level, value)
+
+    #syntactic sugar for sorting in a custom order when only "order" entry is required in the sorting definition
     elif isinstance(sorting, list):
         return sort_level_order(level, sorting)
 
+    #default way of defining a sorting order
+    if sorting['by'] == 'none':
+        return level
+    elif sorting['by'] == 'key':
+        return sort_level_key(level)
+    elif sorting['by'] == 'value':
+        return sort_level_value(level)
+    elif sorting['by'] == 'element':
+        return sort_level_element(level, sorting['value'])
+    elif sorting['by'] == 'custom':
+        return sort_level_order(level, sorting['order'])
 
 def sort_level_key(level):
     '''
     sorts a dictionary by its keys and retruns the sorted dictionary
     '''
+    if isinstance(level, list): return sort_level_value(level)
     level_sorted = dict(sorted(level.items(), key=lambda x: x[0].lower()))
     return level_sorted
 
 def sort_level_value(level):
     '''
     sorts a list alphabetically and returns the sorted list
+    sorts a dictionary by it's value if each dictionary key has a stringifiably sortable single value, otherwise sorts by key
     '''
-    level_sorted = sorted(level, key=lambda x: x.lower())
-    return level_sorted
+    if isinstance(level, list):
+        for value in level:
+            if isinstance(value, dict) or isinstance(value, list):
+                return level
+        level_sorted = sorted(level, key=lambda x: str(x).lower())
+        return level_sorted
+    elif isinstance(level, dict):
+        for key in level:
+            if isinstance(level[key], list) or isinstance(level[key], dict):
+                return sort_level_key(level)
+        return dict(sorted(level.items(), key=lambda x: str(x[1]).lower()))
 
 def sort_level_element(level, element):
     '''
-    sorts a list of dictionaries by a specific element and returns the sorted list
+    sorts a list or dictionary of dictionaries by a specific element and returns the sorted list
     '''
-    level_sorted = sorted(level, key=lambda x: x[element].lower())
-    return level_sorted
+    if isinstance(level, list) or isinstance(level, dict):
+        for child in level:
+            if not isinstance(child, dict):
+                return level
+        level_sorted = sorted(filter(lambda x: element in x, level), key=lambda x: str(x[element]).lower())
+        #add the rest of the elements to the sorted list
+        for child in level:
+            if child not in level_sorted:
+                level_sorted.append(child)
+        if isinstance(level, list):
+            return level_sorted
+        else:
+            return dict(level_sorted)
 
 def sort_level_order(level, order):
     '''
     sorts a dictionary with a specific order of keys and returns the sorted dictionary
-    any keys not defined in the order list are sorted alphabetically after the defined keys
+    any keys not defined in the order are kept in the same order as they were in the original dictionary
     '''
     level_sorted = {}
     for key in order:
         if key in level:
             level_sorted[key] = level[key]
-    for key in dict(sorted(level.items(), key=lambda x: x[0])):
+    for key in level.keys():
         if key not in level_sorted:
             level_sorted[key] = level[key]
     return level_sorted
@@ -75,6 +113,16 @@ def recursive_sort(level, sorting_definition):
     #return if level is not a dictionary or list
     if not isinstance(level, dict) and not isinstance(level, list):
         return level
+
+    #if the sorting definition has an all entry
+    #sort all of the children and their children recursively
+    if 'all' in sorting_definition:
+        #if level is a dictionary
+        if isinstance(level, dict):
+            new_sorting_definition = sorting_definition['all']
+            new_sorting_definition['all'] = sorting_definition['all']
+            for key in level:
+                level[key] = recursive_sort(level[key], new_sorting_definition)
 
     #if the sorting definition has an each entry
     #sort each key of the dictionary/ each index of the list
