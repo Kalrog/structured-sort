@@ -1,0 +1,7 @@
+sort:
+  by: custom
+  order:
+    - summary
+all:
+  sort:
+    - summary

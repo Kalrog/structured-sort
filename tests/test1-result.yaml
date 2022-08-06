@@ -1,0 +1,10 @@
+'1234': other
+test: test
+testing:
+  boolean: true
+  dict:
+    second: test
+    test: test
+    third: three
+  number: 1
+  string: test

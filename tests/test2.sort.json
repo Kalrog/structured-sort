@@ -1,0 +1,28 @@
+{
+    "info": {
+        "sort": "none"
+    },
+    "people": {
+        "sort": "key",
+        "each": {
+            "sort": [
+                "firstname",
+                "lastname",
+                "phones",
+                "children"
+            ],
+            "phones": {
+                "sort": "value"
+            },
+            "children": {
+                "sort": "element.firstname",
+                "each": {
+                    "sort": [
+                        "firstname",
+                        "lastname"
+                    ]
+                }
+            }
+        }
+    }
+}

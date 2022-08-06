@@ -1,0 +1,27 @@
+info: 
+    sort: 
+        by: none
+people:
+    sort: 
+        by: key
+    each:
+        sort: 
+            by: custom
+            order:
+                - firstname
+                - lastname
+                - phones
+                - children
+        phones:
+            sort:
+                by: value
+        children:
+            sort:
+                by: element
+                value: firstname
+            each:
+                sort:
+                    by: custom
+                    order:
+                        - firstname
+                        - lastname

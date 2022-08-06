@@ -1,0 +1,33 @@
+info:
+  version: 1.0.0
+  title: Test 2
+  description: |
+    Test complex document sorting and compare 
+    running the same sorting definition with and without
+    syntactic sugar
+people:
+  hans:
+    firstname: Hans
+    lastname: Zimmer
+    phones:
+    - +49 123456789
+    children:
+    - firstname: Maria
+      lastname: Zimmer
+    - firstname: Peter
+      lastname: Zimmer
+  jane:
+    firstname: Jane
+    lastname: Doe
+    phones:
+    - +49 123456789
+    - +49 923456789
+  john:
+    firstname: John
+    lastname: Doe
+    phones:
+    - +49 123456789
+    - +49 723456789
+    additional_info:
+    - nothing
+    - no one cares

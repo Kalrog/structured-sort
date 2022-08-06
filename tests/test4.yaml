@@ -1,0 +1,19 @@
+meta:
+  summary: Test 4
+  version: 0.1.0
+  description: Test 4
+summary: test4 for testing all reference with custom sort
+content:
+  first:
+    summary: First
+    string: "First"
+    number: 1
+  second:
+    number: 2
+    string: "Second"
+    summary: Second
+  third:
+    string: "Third"
+    summary: Third
+    number: 3
+    other: The third number
